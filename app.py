@@ -639,6 +639,24 @@ with col_chat:
 
     st.chat_input("Escribe un mensaje o comando...", key="input_usuario", on_submit=enviar_mensaje)
 
+# --- PANEL DE ADMINISTRACIÓN (Solo tú deberías usarlo) ---
+with st.sidebar.expander("🛠️ Administración"):
+    password = st.text_input("Contraseña Admin", type="password")
+    if password == "TU_CONTRASEÑA_SECRETA": # Cambia esto
+        st.subheader("Eliminar Ciudadano")
+        dni_a_borrar = st.text_input("DNI del ciudadano a borrar")
+        if st.button("❌ Eliminar Permanentemente"):
+            # Cargamos los datos actuales
+            datos = cargar_datos() 
+            if dni_a_borrar in datos['ciudadanos']:
+                del datos['ciudadanos'][dni_a_borrar]
+                guardar_datos(datos)
+                st.success(f"Ciudadano con DNI {dni_a_borrar} eliminado.")
+                st.rerun()
+            else:
+                st.error("Ese DNI no existe.")
+                
+
 # --- 3. COLUMNA DE MIEMBROS ---
 with col_members:
     st.markdown("### 👥 Ciudadanos")
@@ -658,4 +676,5 @@ with col_members:
             for nombre in usuarios_por_rol[rol]:
                 st.markdown(f'<div class="member-item">🟢 {nombre}</div>', unsafe_allow_html=True)
         else:
+
             st.markdown('<div class="empty-role">Nadie en la ciudad</div>', unsafe_allow_html=True)
