@@ -74,26 +74,7 @@ if 'canal_actual' not in st.session_state:
     st.session_state.canal_actual = "🦾acciones"
 
 # --- PANEL DE ADMINISTRACIÓN EN LA BARRA LATERAL ---
-st.sidebar.divider()
 
-        
-        st.divider()
-        
-        # Función Dinero
-        dni_money = st.text_input("DNI para dar dinero")
-        cantidad = st.number_input("Cantidad €", min_value=0)
-        if st.button("💰 Dar Dinero"):
-            if dni_money in datos['ciudo SOLO LECTURA.")
-            st.session_state.input_usuario = ""
-            return
-
-        # El autor ahora es el nombre del personaje registrado
-        autor = st.session_state.usuario_identificado['nombre']
-       anca' not in st.session_state:
-    st.session_state.banca = datos_cargados["banca"] if datos_cargados else {}
-
-if 'servicio_policia' not in st.session_state:
-    st.session_state.servicio_policia = datos_cargados["servicio_policia"] if datos_cargados else {}
 
 # Estas dos no necesitan guardarse porque dependen de la sesión actual
 if 'usuario_identificado' not in st.session_state:
@@ -102,12 +83,7 @@ if 'canal_actual' not in st.session_state:
     st.session_state.canal_actual = "🦾acciones"
 
 # --- PANEL DE ADMINISTRACIÓN EN LA BARRA LATERAL ---
-st.sidebar.divider()
-with st.sidebar.expander("🔐 SISTEMA DE ADMIN"):
-    admin_password = st.text_input("Contraseña Admin", type="password")
-    
-    if admin_password == "1234": # <--- Tu contraseña
-        st.subheader("Herramientas de Control")
+
         
         # --- FUNCIÓN: ELIMINAR JUGADOR ---
         st.markdown("---")
@@ -718,6 +694,7 @@ with col_members:
         else:
 
             st.markdown('<div class="empty-role">Nadie en la ciudad</div>', unsafe_allow_html=True)
+
 
 
 
