@@ -73,6 +73,50 @@ if 'usuario_identificado' not in st.session_state:
 if 'canal_actual' not in st.session_state:
     st.session_state.canal_actual = "🦾acciones"
 
+# --- BARRA LATERAL ---
+st.sidebar.title("🏙️ Menú Ciudad")
+
+with st.sidebar.expander("🔐 SISTEMA DE ADMIN"):
+    admin_password = st.text_input("Contraseña Admin", type="password")
+    
+    if admin_password == "rol": # <--- Tu contraseña
+        st.subheader("Herramientas de Control")
+        
+        # --- FUNCIÓN: ELIMINAR JUGADOR ---
+        st.markdown("---")
+        st.write("🗑️ **Eliminar Ciudadano**")
+        # Usamos un formulario para evitar que el código se ejecute solo
+        with st.form("form_borrado"):
+            dni_para_borrar = st.text_input("Introduce el DNI exacto")
+            boton_borrar = st.form_submit_button("Confirmar Borrado")
+            
+            if boton_borrar:
+                if dni_para_borrar in datos['ciudadanos']:
+                    del datos['ciudadanos'][dni_para_borrar]
+                    guardar_datos(datos)
+                    st.success(f"DNI {dni_para_borrar} eliminado.")
+                    st.rerun()
+                else:
+                    st.error("Ese DNI no existe.")
+
+        # --- FUNCIÓN: DAR DINERO ---
+        st.markdown("---")
+        st.write("💰 **Inyectar Dinero (Blanco)**")
+        with st.form("form_dinero"):
+            dni_destino = st.text_input("DNI del ciudadano")
+            monto = st.number_input("Cantidad a sumar", min_value=0, step=100)
+            boton_dinero = st.form_submit_button("Enviar Dinero")
+            
+            if boton_dinero:
+                if dni_destino in datos['ciudadanos']:
+                    # Sumamos el dinero
+                    datos['ciudadanos'][dni_destino]['dinero'] += monto
+                    guardar_datos(datos)
+                    st.success(f"Se han sumado {monto}€ al DNI {dni_destino}")
+                    st.rerun()
+                else:
+                    st.error("DNI no encontrado.")
+
 # --- FUNCIONES AUXILIARES ---
 def asegurar_cuenta(dni):
     """Inicializa la cuenta con 500.000€ si el DNI no existe."""
@@ -678,3 +722,4 @@ with col_members:
         else:
 
             st.markdown('<div class="empty-role">Nadie en la ciudad</div>', unsafe_allow_html=True)
+
