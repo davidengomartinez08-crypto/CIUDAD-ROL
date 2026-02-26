@@ -73,9 +73,6 @@ if 'usuario_identificado' not in st.session_state:
 if 'canal_actual' not in st.session_state:
     st.session_state.canal_actual = "🦾acciones"
 
-# --- BARRA LATERAL ---
-st.sidebar.title("🏙️ Menú Ciudad")
-
 with st.sidebar.expander("🔐 SISTEMA DE ADMIN"):
     admin_password = st.text_input("Contraseña Admin", type="password")
     
@@ -722,4 +719,5 @@ with col_members:
         else:
 
             st.markdown('<div class="empty-role">Nadie en la ciudad</div>', unsafe_allow_html=True)
+
 
