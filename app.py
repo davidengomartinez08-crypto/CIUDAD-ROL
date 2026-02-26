@@ -75,22 +75,74 @@ if 'canal_actual' not in st.session_state:
 
 # --- PANEL DE ADMINISTRACIÓN EN LA BARRA LATERAL ---
 st.sidebar.divider()
+
+        
+        st.divider()
+        
+        # Función Dinero
+        dni_money = st.text_input("DNI para dar dinero")
+        cantidad = st.number_input("Cantidad €", min_value=0)
+        if st.button("💰 Dar Dinero"):
+            if dni_money in datos['ciudo SOLO LECTURA.")
+            st.session_state.input_usuario = ""
+            return
+
+        # El autor ahora es el nombre del personaje registrado
+        autor = st.session_state.usuario_identificado['nombre']
+       anca' not in st.session_state:
+    st.session_state.banca = datos_cargados["banca"] if datos_cargados else {}
+
+if 'servicio_policia' not in st.session_state:
+    st.session_state.servicio_policia = datos_cargados["servicio_policia"] if datos_cargados else {}
+
+# Estas dos no necesitan guardarse porque dependen de la sesión actual
+if 'usuario_identificado' not in st.session_state:
+    st.session_state.usuario_identificado = None 
+if 'canal_actual' not in st.session_state:
+    st.session_state.canal_actual = "🦾acciones"
+
+# --- PANEL DE ADMINISTRACIÓN EN LA BARRA LATERAL ---
+st.sidebar.divider()
 with st.sidebar.expander("🔐 SISTEMA DE ADMIN"):
     admin_password = st.text_input("Contraseña Admin", type="password")
     
-    if admin_password == "rol": # <--- CAMBIA ESTO
-        st.subheader("Herramientas")
+    if admin_password == "1234": # <--- Tu contraseña
+        st.subheader("Herramientas de Control")
         
-        # Función Eliminar
-        dni_del = st.text_input("DNI para borrar")
-        if st.button("❌ Eliminar Ciudadano"):
-            if dni_del in datos['ciudadanos']:
-                del datos['ciudadanos'][dni_del]
-                guardar_datos(datos)
-                st.success("Borrado correctamente")
-                st.rerun()
-            else:
-                st.error("No existe ese DNI")
+        # --- FUNCIÓN: ELIMINAR JUGADOR ---
+        st.markdown("---")
+        st.write("🗑️ **Eliminar Ciudadano**")
+        # Usamos un formulario para evitar que el código se ejecute solo
+        with st.form("form_borrado"):
+            dni_para_borrar = st.text_input("Introduce el DNI exacto")
+            boton_borrar = st.form_submit_button("Confirmar Borrado")
+            
+            if boton_borrar:
+                if dni_para_borrar in datos['ciudadanos']:
+                    del datos['ciudadanos'][dni_para_borrar]
+                    guardar_datos(datos)
+                    st.success(f"DNI {dni_para_borrar} eliminado.")
+                    st.rerun()
+                else:
+                    st.error("Ese DNI no existe.")
+
+        # --- FUNCIÓN: DAR DINERO ---
+        st.markdown("---")
+        st.write("💰 **Inyectar Dinero (Blanco)**")
+        with st.form("form_dinero"):
+            dni_destino = st.text_input("DNI del ciudadano")
+            monto = st.number_input("Cantidad a sumar", min_value=0, step=100)
+            boton_dinero = st.form_submit_button("Enviar Dinero")
+            
+            if boton_dinero:
+                if dni_destino in datos['ciudadanos']:
+                    # Sumamos el dinero
+                    datos['ciudadanos'][dni_destino]['dinero'] += monto
+                    guardar_datos(datos)
+                    st.success(f"Se han sumado {monto}€ al DNI {dni_destino}")
+                    st.rerun()
+                else:
+                    st.error("DNI no encontrado.")
         
         st.divider()
         
@@ -105,35 +157,7 @@ with st.sidebar.expander("🔐 SISTEMA DE ADMIN"):
                 st.success("Dinero entregado")
                 st.rerun()
             else:
-                st.error("DNI no encontrado")
-                
-# --- FUNCIONES AUXILIARES ---
-def asegurar_cuenta(dni):
-    """Inicializa la cuenta con 500.000€ si el DNI no existe."""
-    if dni not in st.session_state.banca:
-        st.session_state.banca[dni] = {
-            "banco": 500000,
-            "efectivo": 0,
-            "negro": 0
-        }
-
-# --- LÓGICA DE ENVÍO DE MENSAJES ---
-def enviar_mensaje():
-    nuevo_txt = st.session_state.input_usuario.strip()
-    canal_actual = st.session_state.canal_actual
-    rol_usuario = st.session_state.usuario_identificado['rol']
-    
-    if nuevo_txt:
-        # RESTRICCIÓN DE ESCRITURA: Solo policía escribe en agentes y detenciones
-        canales_solo_lectura_pol = ["🚔agentes", "⛓️‍💥detenciones"]
-        if rol_usuario != "Policía" and canal_actual in canales_solo_lectura_pol:
-            st.toast("⚠️ Tienes este canal en modo SOLO LECTURA.")
-            st.session_state.input_usuario = ""
-            return
-
-        # El autor ahora es el nombre del personaje registrado
-        autor = st.session_state.usuario_identificado['nombre']
-        hora_actual = datetime.now()
+                st.error("D hora_actual = datetime.now()
         hora_str = hora_actual.strftime("%H:%M")
         mensaje_formateado = None
         
@@ -694,6 +718,7 @@ with col_members:
         else:
 
             st.markdown('<div class="empty-role">Nadie en la ciudad</div>', unsafe_allow_html=True)
+
 
 
 
