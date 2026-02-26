@@ -73,6 +73,40 @@ if 'usuario_identificado' not in st.session_state:
 if 'canal_actual' not in st.session_state:
     st.session_state.canal_actual = "🦾acciones"
 
+# --- PANEL DE ADMINISTRACIÓN EN LA BARRA LATERAL ---
+st.sidebar.divider()
+with st.sidebar.expander("🔐 SISTEMA DE ADMIN"):
+    admin_password = st.text_input("Contraseña Admin", type="password")
+    
+    if admin_password == "rol": # <--- CAMBIA ESTO
+        st.subheader("Herramientas")
+        
+        # Función Eliminar
+        dni_del = st.text_input("DNI para borrar")
+        if st.button("❌ Eliminar Ciudadano"):
+            if dni_del in datos['ciudadanos']:
+                del datos['ciudadanos'][dni_del]
+                guardar_datos(datos)
+                st.success("Borrado correctamente")
+                st.rerun()
+            else:
+                st.error("No existe ese DNI")
+        
+        st.divider()
+        
+        # Función Dinero
+        dni_money = st.text_input("DNI para dar dinero")
+        cantidad = st.number_input("Cantidad €", min_value=0)
+        if st.button("💰 Dar Dinero"):
+            if dni_money in datos['ciudadanos']:
+                # Aquí sumamos a la clave 'dinero'. Asegúrate que sea la misma que usas en el registro
+                datos['ciudadanos'][dni_money]['dinero'] += cantidad
+                guardar_datos(datos)
+                st.success("Dinero entregado")
+                st.rerun()
+            else:
+                st.error("DNI no encontrado")
+                
 # --- FUNCIONES AUXILIARES ---
 def asegurar_cuenta(dni):
     """Inicializa la cuenta con 500.000€ si el DNI no existe."""
@@ -661,68 +695,7 @@ with col_members:
 
             st.markdown('<div class="empty-role">Nadie en la ciudad</div>', unsafe_allow_html=True)
 
-# ==========================================
-#        SECCIÓN DE ADMINISTRACIÓN
-# ==========================================
 
-st.divider() # Una línea para separar
-with st.expander("🔐 Panel de Administración"):
-    # 1. Inicio de Sesión
-    admin_password = st.text_input("Introduce la clave de acceso", type="password", key="admin_key")
-    
-    # --- CAMBIA '1234' POR TU CONTRASEÑA REAL ---
-    if admin_password == "rolear":
-        st.success("Acceso concedido, Administrador.")
-        
-        # Creamos dos columnas para las funciones
-        col1, col2 = st.columns(2)
 
-        # ------------------------------------------
-        # FUNCIÓN 1: ELIMINAR JUGADOR POR DNI
-        # ------------------------------------------
-        with col1:
-            st.subheader("🗑️ Eliminar Jugador")
-            dni_eliminar = st.text_input("DNI del ciudadano a borrar", key="dni_del")
-            
-            if st.button("❌ Ejecutar Borrado"):
-                if dni_eliminar:
-                    datos = cargar_datos()
-                    if dni_eliminar in datos['ciudadanos']:
-                        # El comando 'del' borra toda la ficha del jugador
-                        del datos['ciudadanos'][dni_eliminar]
-                        guardar_datos(datos)
-                        st.success(f"DNI {dni_eliminar} ha sido borrado.")
-                        st.rerun()
-                    else:
-                        st.error("Ese DNI no existe.")
-                else:
-                    st.warning("Escribe un DNI.")
-
-        # ------------------------------------------
-        # FUNCIÓN 2: DAR DINERO POR DNI
-        # ------------------------------------------
-        with col2:
-            st.subheader("💵 Dar Dinero (Blanco)")
-            dni_dinero = st.text_input("DNI del beneficiario", key="dni_cash")
-            cantidad = st.number_input("Cantidad a entregar", min_value=0, step=100)
-            
-            if st.button("💰 Entregar Dinero"):
-                if dni_dinero:
-                    datos = cargar_datos()
-                    if dni_dinero in datos['ciudadanos']:
-                        # Sumamos la cantidad al dinero actual (dinero_blanco)
-                        # Nota: asegúrate de que el nombre del campo sea 'dinero' o 'banco' según tu código
-                        datos['ciudadanos'][dni_dinero]['dinero'] += cantidad
-                        
-                        guardar_datos(datos)
-                        st.success(f"Se han entregado {cantidad}€ al DNI {dni_dinero}.")
-                        st.rerun()
-                    else:
-                        st.error("Ese DNI no existe.")
-                else:
-                    st.warning("Escribe un DNI.")
-    
-    elif admin_password != "":
-        st.error("Contraseña incorrecta.")
 
 
